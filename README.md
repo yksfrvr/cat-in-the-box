@@ -35,7 +35,4 @@ To get started with the app, follow these steps:
     ```
 
 ## TRY IT!
-https://efflepw.github.io/cat-in-the-box/
-
-
-
+https://yksfrvr.github.io/cat-in-the-box/

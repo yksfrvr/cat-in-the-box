@@ -21,3 +21,50 @@ export const getPositionOnMove = (
 
   return newPositions;
 };
+
+export const getCatPath = (moves: number[], catBox: number): number[] => {
+  if (moves.length === 0) return [];
+  if (moves.length === 1) return [catBox];
+
+  let positions = new Set([...Array(BOX_COUNT).keys()]);
+  const previousPositions: Map<number, number>[] = [];
+
+  moves.slice(0, -1).forEach((move) => {
+    const nextPositions = new Set<number>();
+    const previousPositionByNext = new Map<number, number>();
+
+    positions.forEach((position) => {
+      [position - 1, position + 1].forEach((nextPosition) => {
+        if (
+          nextPosition >= 0 &&
+          nextPosition < BOX_COUNT &&
+          nextPosition !== move &&
+          !nextPositions.has(nextPosition)
+        ) {
+          nextPositions.add(nextPosition);
+          previousPositionByNext.set(nextPosition, position);
+        }
+      });
+    });
+
+    positions = nextPositions;
+    previousPositions.push(previousPositionByNext);
+  });
+
+  let position = [...positions].find(
+    (possiblePosition) => Math.abs(possiblePosition - catBox) === 1
+  );
+
+  if (position === undefined) return [];
+
+  const path = [catBox];
+  for (let index = previousPositions.length - 1; index >= 1; index--) {
+    path.unshift(position);
+    const previousPosition = previousPositions[index].get(position);
+    if (previousPosition === undefined) return [];
+    position = previousPosition;
+  }
+
+  path.unshift(position);
+  return path;
+};

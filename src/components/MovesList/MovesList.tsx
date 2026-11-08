@@ -1,6 +1,14 @@
 import { useContext } from "react";
 import MovesContext from "../../context/moves";
-import { UNKNOWN_CAT_COLOR, CONGRATULATIONS, IMPOSSIBLE, MINIMUM_MOVES, MOVES, MOVES_COLORS, TRY_AGAIN } from "../../const/text";
+import {
+  CONGRATULATIONS,
+  IMPOSSIBLE,
+  MINIMUM_MOVES,
+  MOVES,
+  MOVES_COLORS,
+  TRY_AGAIN,
+  UNKNOWN_CAT_COLOR,
+} from "../../const/text";
 import { BOXES_CONFIG } from "../../const/config";
 import { getCatPath } from "../../utils/position";
 
@@ -12,10 +20,10 @@ const getStrategyConclusion = (movesNumber: number): string => {
   } else {
     return TRY_AGAIN;
   }
-}
+};
 
 const MovesList = () => {
-  const { moves, catBox } = useContext(MovesContext);
+  const { moves, catBox, restartGame } = useContext(MovesContext);
   const catMoves = catBox == null ? [] : getCatPath(moves, catBox);
 
   const getColor = (move: number, idx: number) => {
@@ -29,14 +37,23 @@ const MovesList = () => {
   return (
     <div className="absolute bottom-16 left-0 right-0">
       {catBox != null && (
-        <div
-          role="status"
-          className="mx-auto mb-6 w-fit max-w-full rounded-2xl border border-slate-200 bg-white/90 px-6 py-5 text-center shadow-lg backdrop-blur-sm"
-        >
-          <p className="mb-2 text-2xl font-semibold text-slate-800 select-none">
-            {CONGRATULATIONS} {moves.length} {MOVES}
-          </p>
-          <p className="text-base text-slate-600 select-none">{getStrategyConclusion(moves.length)}</p>
+        <div className="mx-auto mb-6 flex w-fit max-w-[calc(100%-2rem)] flex-col items-center gap-3 text-center">
+          <div role="status" className="rounded-2xl border border-emerald-200/80 bg-emerald-50/95 px-6 py-4 text-slate-800 shadow-lg backdrop-blur-sm">
+            <p className="text-xl font-semibold text-emerald-700 sm:text-2xl">
+              {CONGRATULATIONS} {moves.length} {MOVES}
+            </p>
+            <p className="mt-1 text-sm text-slate-700 sm:text-base">
+              {getStrategyConclusion(moves.length)}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={restartGame}
+            className="flex items-center gap-2 rounded-full border border-amber-300/50 bg-amber-400 px-6 py-3 text-base font-bold text-slate-900 shadow-lg transition hover:bg-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-200"
+          >
+            <span aria-hidden="true">↻</span>
+            Play again
+          </button>
         </div>
       )}
       <div className="flex justify-center flex-wrap gap-2 opacity-90 mb-4">
@@ -52,7 +69,7 @@ const MovesList = () => {
         ))}
       </div>
       <div className="flex justify-center flex-wrap gap-2 opacity-90">
-        <span className="leading-[32px]">Kitty moves: </span>
+        <span className="leading-[32px]">Cat moves: </span>
         {moves.map((_, idx) => {
           const catMove = catMoves[idx];
 

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import MovesContext from "../../context/moves";
-import { CONGRATULATIONS, IMPOSSIBLE, MINIMUM_MOVES, MOVES, MOVES_COLORS, TRY_AGAIN } from "../../const/text";
+import { UNKNOWN_CAT_COLOR, CONGRATULATIONS, IMPOSSIBLE, MINIMUM_MOVES, MOVES, MOVES_COLORS, TRY_AGAIN } from "../../const/text";
 import { BOXES_CONFIG } from "../../const/config";
 import { getCatPath } from "../../utils/position";
 
@@ -29,11 +29,14 @@ const MovesList = () => {
   return (
     <div className="absolute bottom-16 left-0 right-0">
       {catBox != null && (
-        <div className="py-16">
-          <p className="text-5xl text-slate-500 select-none text-center">
+        <div
+          role="status"
+          className="mx-auto mb-6 w-fit max-w-full rounded-2xl border border-slate-200 bg-white/90 px-6 py-5 text-center shadow-lg backdrop-blur-sm"
+        >
+          <p className="mb-2 text-2xl font-semibold text-slate-800 select-none">
             {CONGRATULATIONS} {moves.length} {MOVES}
           </p>
-          <p className="text-3xl text-slate-500 select-none text-center">{getStrategyConclusion(moves.length)}</p>
+          <p className="text-base text-slate-600 select-none">{getStrategyConclusion(moves.length)}</p>
         </div>
       )}
       <div className="flex justify-center flex-wrap gap-2 opacity-90 mb-4">
@@ -41,10 +44,8 @@ const MovesList = () => {
         {moves.map((move, idx) => (
           <div
             key={idx}
-            className={`size-8 flex justify-center items-center ${getColor(
-              move,
-              idx
-            )}`}
+            className="size-8 flex justify-center items-center rounded-md"
+            style={{ backgroundColor: getColor(move, idx) }}
           >
             <span>{move + 1}</span>
           </div>
@@ -59,9 +60,8 @@ const MovesList = () => {
             <div
               key={idx}
               title={catMove == null ? "?" : `Box ${catMove + 1}`}
-              className={`size-8 flex justify-center items-center ${
-                catMove == null ? "bg-slate-400" : getColor(catMove, idx)
-              }`}
+              className="size-8 flex justify-center items-center rounded-md"
+              style={{ backgroundColor: catMove == null ? UNKNOWN_CAT_COLOR : getColor(catMove, idx) }}
             >
               <span>{catMove == null ? "?" : catMove + 1}</span>
             </div>
